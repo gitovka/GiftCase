@@ -1,0 +1,31 @@
+<div data-role="header" class="scase-header scase-subpage-header">
+    <h1>sCase pilot</h1>
+
+    <a href="#" data-icon="back" data-rel="back" title="Go back" class="back-button">Back</a>
+
+    <!-- logout -->
+    <a class="ui-btn-right fb-login-button logout-button" data-rel="popup" data-position-to="window" href="#logout-popup-category">&nbsp;&nbsp; Log out</a>
+    <!-- popup -->
+    <div data-role="popup" id="logout-popup-category" class="ui-content" data-overlay-theme="b">
+        <h3>Logout</h3>
+        <br/>
+        <p>Are you sure you want to logout?</p>
+        <br/>
+        <button class="ui-btn ui-corner-all ui-shadow ui-btn-b ui-btn-icon-left ui-icon-check logout-popup" onclick="logoutUserFromApp();" id="yes-logout">Yes</button>
+        <button class="ui-btn ui-corner-all ui-shadow ui-btn-b ui-btn-icon-left ui-icon-delete logout-popup" onclick="dontLogoutUserFromApp('category')" id="no-logout">No</button>
+    </div>
+    <!-- /popup -->
+    <!-- /logout -->
+
+</div>
+<div data-role="main" class="ui-content">
+
+    <h4 class="title-of-page-content">Find gifts</h4>
+
+    <ul data-role="listview" data-inset="true" id="gift-categories">
+        <li data-role="list-divider" class="scase-list-divider">Categories</li>
+        <!--Here comes gift categories-->
+    </ul>
+
+</div>
+<div data-role="footer" data-position="fixed"></div>
