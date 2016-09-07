@@ -391,7 +391,7 @@ public class HibernateController{
 		return true;
 	}
 
-	public boolean updateMusicMovieGift(long sendTime, String status) {
+	public boolean updateMusicMovieGift(String sendTime, String status) {
 
 		/* Create a new hibernate session and begin the transaction */
 		Session hibernateSession = HibernateUtil.getSessionFactory()
@@ -414,7 +414,7 @@ public class HibernateController{
 		return true;
 	}
 
-	public boolean updateBookGift(long sendTime, String status) {
+	public boolean updateBookGift(String sendTime, String status) {
 
 		/* Create a new hibernate session and begin the transaction */
 		Session hibernateSession = HibernateUtil.getSessionFactory()
@@ -437,7 +437,7 @@ public class HibernateController{
 		return true;
 	}
 
-	public boolean updateEventGift(long sendTime, String status) {
+	public boolean updateEventGift(String sendTime, String status) {
 
 		/* Create a new hibernate session and begin the transaction */
 		Session hibernateSession = HibernateUtil.getSessionFactory()
@@ -565,8 +565,6 @@ public class HibernateController{
 
 		String facebookId = getUserByUsersId(usersId).get(0).getfacebookId();
 
-		logger.info(" ušao");
-		
 		/* Create a new hibernate session and begin the transaction */
 		Session hibernateSession = HibernateUtil.getSessionFactory()
 				.openSession();

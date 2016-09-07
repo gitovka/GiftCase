@@ -54,11 +54,11 @@ public class JavaAlgogiftStatusController {
 	public String changeGiftStatus(JSONObject giftWithChangedStatus,
 			@QueryParam("categoryId") int categoryId) throws JSONException {
 
-		long sendTime;
+		String sendTime;
 		String status;
 		
 		try {
-			sendTime = (long) giftWithChangedStatus.get("sendTime");
+			sendTime =  (String)  giftWithChangedStatus.get("sendTime");
 			status = (String) giftWithChangedStatus.get("status");
 		} catch (JSONException e) {
 			obj.put("InfoException", "Status is updated!");

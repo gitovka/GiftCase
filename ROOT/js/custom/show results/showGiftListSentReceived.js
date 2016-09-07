@@ -3,8 +3,6 @@ function makeListSentReceived(gift, inOSent, recSendName) {
     var categoryName = getCategoryNameFromId(gift.categoryId);
     var resultString = "";
 
-    console.log(categoryName);
-
     switch (categoryName) {
         case 'music':
         case 'movies':
@@ -43,7 +41,6 @@ function makeListSentReceived(gift, inOSent, recSendName) {
                 name = gift.title;
             }
             price = gift.price;
-            console.log(gift.title);
             break;
     }
 

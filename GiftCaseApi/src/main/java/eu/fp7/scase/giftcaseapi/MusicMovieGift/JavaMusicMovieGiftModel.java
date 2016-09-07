@@ -73,7 +73,7 @@ public class JavaMusicMovieGiftModel{
 		private int categoryId;
 
 		@Column(name = "\"sendtime\"")
-		private long sendTime;
+		private String sendTime;
 
 		@Id
 		@GeneratedValue
@@ -123,7 +123,7 @@ public class JavaMusicMovieGiftModel{
         	this.categoryId = categoryId;
     	}
 
-	    public void setsendTime(long sendTime){
+	    public void setsendTime(String sendTime){
         	this.sendTime = sendTime;
     	}
 
@@ -173,7 +173,7 @@ public class JavaMusicMovieGiftModel{
         	return this.categoryId;
     	}
 
-	    public long getsendTime(){
+	    public String getsendTime(){
         	return this.sendTime;
     	}
 

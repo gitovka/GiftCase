@@ -10,8 +10,6 @@ function showRecommandation(categoryId, gifts, userId, targetUserId) {
     //idsArrayForIndexPage, idOfPartialPage, idOfList]
     var idsArrayForHtml = makeArrayForHTMLAndContent(typeOfGift);
 
-    //get ids from divisions from main-page.html
-
     appendFilterForGifts("#gifts .row", targetUserId, categoryId);
     appendResults(gifts, typeOfGift, idsArrayForHtml, userId, targetUserId);
 }
@@ -38,25 +36,48 @@ function appendResults(gifts, typeOfGift, idsArrayForHtml, userId, targetUserId)
         $(idOfList).append("<div class='col-sm-12 wow flipInY no-gifts recommended-gifts' data-wow-offset='10' data-wow-delay='0.2s'>Sorry, there are no recommended gifts for the category.</div>");
     }
 
+    //skip first key of json array that is different for each category
+    console.log(typeOfGift);
+    console.log(gifts);
+    switch (typeOfGift) {
+        case 'music':
+        case 'movies':
+            gifts = gifts.get_productssearchsearch_response;
+            break;
+        case 'books':
+            gifts = gifts.get_volumes_response;
+            break;
+        case 'events':
+            gifts = gifts.get_search_response;
+            break;
+    }
+
     //for each gift render HTML
     $.each(gifts, function (i, element) {
-        //    appendNextGift(i + 1, typeOfGift, idOfList);
+
+        //skip element if it is equals to null
+        if (element == null) {
+            return true;
+        }
 
         $.each(element, function (i, oneGift) {
             var imageOfGift, priceOfGift, giftTitle, linkForGift;
 
             switch (typeOfGift) {
                 case 'books':
-                    if (oneGift.volumeInfo.imageLinks.thumbnail === undefined) {
-                        oneGift.volumeInfo.imageLinks.thumbnail = "img/no_image.png";
+                    if (oneGift.volumeInfo.imageLinks != null) {
+                        if (oneGift.volumeInfo.imageLinks.thumbnail === undefined) {
+                            oneGift.volumeInfo.imageLinks.thumbnail = "img/no_image.png";
+                        }
+                        imageOfGift = oneGift.volumeInfo.imageLinks.thumbnail;
+                    } else {
+                        imageOfGift = "img/no_image.png";
                     }
-                    imageOfGift = oneGift.volumeInfo.imageLinks.thumbnail;
                     if (oneGift.saleInfo.retailPrice === null) {
                         oneGift.saleInfo.retailPrice = "There is no price";
+                    } else {
+                        priceOfGift = oneGift.saleInfo.retailPrice.amount + "  " + EURO;
                     }
-                    //priceOfGift = oneGift.saleInfo.retailPrice + "  " + EURO;
-                    priceOfGift = "There is no price";
-                    //EUR
                     //currencyOfBook = oneGift.currencyCode;
                     giftTitle = oneGift.volumeInfo.title;
                     oneGift.volumeInfo.title = oneGift.volumeInfo.title.replace(/"/g, "");
@@ -65,21 +86,37 @@ function appendResults(gifts, typeOfGift, idsArrayForHtml, userId, targetUserId)
                     appendPartOfList(giftTitle, imageOfGift, priceOfGift, linkForGift, idOfList, i, oneGift, typeOfGift, userId, targetUserId);
                     break;
                 case 'events':
-
                     $.each(oneGift, function (i, event) {
-                    //    console.log(event);
-                        giftTitle = event.title;
-                        if (event.image === undefined) {
-                            imageOfGift = "img/no_image.png";
+                        //sometimes this event has only one event and the other times it is consists of multiple events
+                        if (event.length == undefined) {
+                            giftTitle = event.title;
+                            if (event.image === undefined) {
+                                imageOfGift = "img/no_image.png";
+                            } else {
+                                imageOfGift = event.image.medium.url;
+                            }
+                            if (event.price === undefined) {
+                                event.price = "There is no price";
+                            }
+                            priceOfGift = event.price;
+                            linkForGift = POPUP;
+                            appendPartOfList(giftTitle, imageOfGift, priceOfGift, linkForGift, idOfList, i, event, typeOfGift, userId, targetUserId);
                         } else {
-                            imageOfGift = event.image.medium.url;
+                            $.each(event, function (i, subEvent) {
+                                giftTitle = subEvent.title;
+                                if (subEvent.image === undefined) {
+                                    imageOfGift = "img/no_image.png";
+                                } else {
+                                    imageOfGift = subEvent.image.medium.url;
+                                }
+                                if (subEvent.price === undefined) {
+                                    subEvent.price = "There is no price";
+                                }
+                                priceOfGift = event.price;
+                                linkForGift = POPUP;
+                                appendPartOfList(giftTitle, imageOfGift, priceOfGift, linkForGift, idOfList, i, subEvent, typeOfGift, userId, targetUserId);
+                            });
                         }
-                        if (event.price === undefined) {
-                            event.price = "There is no price";
-                        }
-                        priceOfGift = event.price;
-                        linkForGift = POPUP;
-                        appendPartOfList(giftTitle, imageOfGift, priceOfGift, linkForGift, idOfList, i, event, typeOfGift, userId, targetUserId);
                     });
                     break;
                 default:
@@ -118,8 +155,13 @@ function appendPartOfList(title, image, price, link, idOfList, i, element, typeO
             var bookAuthors, bookCategory, languageOfBook, pagesOfBook, publisherOfBook, description, publishedDate;
             var imageOfGift, priceOfGift, giftTitle;
 
-            description = element.volumeInfo.description.replace(/"/g, '\'');
-            element.description = description.replace(/"/g, '\'');
+            if (!checkIfUndefined(element.volumeInfo.description)) {
+                description = element.volumeInfo.description.replace(/"/g, '');
+                element.volumeInfo.description = element.volumeInfo.description.replace(/"/g, '');
+            } else {
+                description = '';
+            }
+            element.description = description.replace(/"/g, '');
             bookAuthors = element.volumeInfo.authors;
             element.authors = bookAuthors;
             bookCategory = element.volumeInfo.category;
@@ -131,11 +173,14 @@ function appendPartOfList(title, image, price, link, idOfList, i, element, typeO
             element.publisher = publisherOfBook;
             publishedDate = element.volumeInfo.publishedDate;
 
-            imageOfGift = element.volumeInfo.imageLinks.thumbnail;
-            element.thumbnail = imageOfGift;
-           // priceOfGift = element.saleInfo.retailPrice + "  " + EURO;
-            priceOfGift = "There is no price!";
+            if (!checkIfNull(element.volumeInfo.imageLinks)) {
+                imageOfGift = element.volumeInfo.imageLinks.thumbnail;
+                element.thumbnail = imageOfGift;
+            } else {
+                element.thumbnail = "img/no_image.png";
+            }
             element.amount = element.saleInfo.retailPrice.amount;
+            priceOfGift = element.amount + "  " + EURO;
             giftTitle = element.volumeInfo.title;
             element.title = giftTitle;
             element.currencyCode = element.saleInfo.currencyCode;
@@ -146,25 +191,44 @@ function appendPartOfList(title, image, price, link, idOfList, i, element, typeO
             /*         infoAboutGift += ' | <label class="language-of-gift">' + languageOfBook + '</label> <br>';*/
             infoAboutGift += ' <p><b>Price: </b>' + priceOfGift + '</p> ';
             if (description != null) {
-                infoAboutGift += '<p class="description-of-gift">' + description + '</p>';
+                infoAboutGift += '<p class="description-of-gift">' + description.replace(/"/g, '') + '</p>';
             }
-            if (bookAuthors != null && publisherOfBook != null) {
-                infoAboutGift +=
-                    ' <h6 id="book-authors">Authors </h6><label>' + bookAuthors + '</label>' +
-                    '<h6 id="book-publishers">Publisher</h6><label>' + publisherOfBook + '</label>';
+
+            infoAboutGift +=  '<h6 id="book-authors">Authors </h6>';
+
+            if (bookAuthors != null ) {
+                infoAboutGift += '<label class="book-info" id="book-authors">' + bookAuthors + '</label>';
+            } else {
+                infoAboutGift += '<label class="book-info"></label>'
             }
+
+            infoAboutGift += '<h6 id="book-publishers">Publisher</h6>';
+
+            if (publisherOfBook != null){
+                infoAboutGift +=  '<label class="book-info">' + publisherOfBook + '</label>';
+            } else {
+                infoAboutGift += '<label class="book-info"></label>'
+            }
+
             if (publishedDate != null) {
+                infoAboutGift += '<h6>Published</h6>';
                 var date = publishedDate.split('-');
-                infoAboutGift += '<h6>Published:</h6><label class="gift-published">(' + date.reverse().join('.') + '.' + ')</label>';
+                infoAboutGift += '<label class="gift-published book-info">(' + date.reverse().join('.') + '.' + ')</label>';
+            } else {
+                infoAboutGift += '<label class="book-info"></label>'
             }
+
+            infoAboutGift += '<h6 id="pages-of-book">Pages</h6>';
+
             if (pagesOfBook != null) {
-                infoAboutGift += ' <h6 id="pages-of-book">Pages</h6><label>' + pagesOfBook + '</label>';
+                infoAboutGift += '<label class="book-info">' + pagesOfBook + '</label>';
+            } else {
+                infoAboutGift += '<label class="book-info"></label>';
             }
 
             if (description != null && description != "") {
-                element.description = description.replace(/"/g, '\'');
+                element.description = description.replace(/"/g, '');
             }
-            console.log(element);
             break;
         case 'events':
             var cityName, countryName, startTime, description;
@@ -195,11 +259,13 @@ function appendPartOfList(title, image, price, link, idOfList, i, element, typeO
             infoAboutGift += ' <p><b>Price: </b>' + priceOfGift + '</p> ';
 
             if (description != null) {
+                description = description.replace(/"/g, '');
+                description = description.replace(/(<([^>]+)>)/ig," ");
                 infoAboutGift += '<p class="description-of-gift">' + description + '</p>';
             }
 
             if (description != null && description != '') {
-                element.description = description.replace(/"/g, '\'');
+                element.description = description.replace(/"/g, '');
 
                 if (description.indexOf("<a href=") > 0) {
                     element.description = description.substring(0, description.indexOf("<a href="))
@@ -264,11 +330,11 @@ function makeStringFromGift(gift, typeOfGift, userId, targetUserId) {
     gift.sender = userFacebookId;
     gift.status = "pending";
 
-    gift.sendTime = new Date().getTime();
+    gift.sendTime = new Date().getTime().toString();
 
     //rename shortDescription in description
     if ('shortDescription' in gift) {
-        gift.description = gift.shortDescription;
+        gift.description = gift.shortDescription.replace(/"/g, '');
         delete gift.shortDescription;
     }
 
@@ -280,6 +346,16 @@ function makeStringFromGift(gift, typeOfGift, userId, targetUserId) {
         }
         gift.description = gift.description.replace(/"/g, "");
         gift.description = gift.description.replace(/'/g, "");
+    }
+
+    if (!checkIfUndefined(gift.volumeInfo)) {
+        if (gift.volumeInfo.description != null) {
+            if (gift.volumeInfo.description.indexOf("\"") > 0) {
+                gift.volumeInfo.description = null;
+            }
+            gift.volumeInfo.description = gift.volumeInfo.description.replace(/"/g, "");
+            gift.volumeInfo.description = gift.volumeInfo.description.replace(/'/g, "");
+        }
     }
 
     var giftString = JSON.stringify(gift);
@@ -297,4 +373,20 @@ function showWarningAboutBuyingGift(stringObjectGift) {
 
 function buyGift(stringObjectGift) {
     postGiftProposal(stringObjectGift);
+}
+
+function checkIfUndefined(element) {
+    if (element === undefined) {
+        return true;
+    } else {
+        return false;
+    }
+}
+
+function checkIfNull(element) {
+    if (element === null) {
+        return true;
+    } else {
+        return false;
+    }
 }

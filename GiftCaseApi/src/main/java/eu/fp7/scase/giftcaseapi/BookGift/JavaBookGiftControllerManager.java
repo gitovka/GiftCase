@@ -55,7 +55,7 @@ public class JavaBookGiftControllerManager{
         
         SendEmail mail = new SendEmail();
         if (mail.sendNotification(oJavaBookGiftModel.getrecipient(), sender)){
-        	obj.put("InfoException", "Gift is sent! \n Your friend will get an e-mail notification.");
+        	obj.put("InfoException", "Gift is sent!");
         } else {
         	obj.put("InfoException", "Gift is sent!");
         }

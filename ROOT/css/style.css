@@ -1164,3 +1164,8 @@ img {
 .app-status {
   text-transform: uppercase;
 }
+
+.book-info {
+  height: 25px;
+  overflow: hidden;
+}

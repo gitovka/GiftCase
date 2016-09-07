@@ -17,14 +17,11 @@
 * Contact			   : christopherzolotas@issel.ee.auth.gr
 */
 
-
 package eu.fp7.scase.giftcaseapi.getBooksSocial;
 
 import java.util.List;
 
-import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
-import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
@@ -32,13 +29,9 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.UriInfo;
 import javax.ws.rs.QueryParam; 
 
-import org.codehaus.jettison.json.JSONObject;
-
 import eu.fp7.scase.giftcaseapi.Users.JavaUsersModel;
 import eu.fp7.scase.giftcaseapi.facebookLogin.ApplicationContext;
 import eu.fp7.scase.giftcaseapi.utilities.HibernateController;
-
-
 
 /*
  * JavaAlgogetBooksSocialController class is responsible to handle incoming HTTP requests for the getBooksSocial resource. More specifically
@@ -81,4 +74,3 @@ public class JavaAlgogetBooksSocialController{
 		return oGetgetBooksSocialHandler.getgetbookssocial();
 	}
 }
-

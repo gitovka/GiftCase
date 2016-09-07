@@ -39,9 +39,6 @@ function chooseCategoryForTargetUser(targetUserId) {
                 '<p>Otherwise, <span class="category-color">all</span> categories are shown. </p>' +
                 '</div>');
 
-            //go to categories section
-            $("#simulate-categories").click();
-
             //for each content of categories array append list on category-
             $.each(categories, function (key, category) {
 
@@ -77,6 +74,9 @@ function chooseCategoryForTargetUser(targetUserId) {
                     '</div>'
                 );
             });
+			
+			//go to categories section
+            $("#simulate-categories").click();
 
             //bind click event on categories
             goToCategoryPage(targetUserId);

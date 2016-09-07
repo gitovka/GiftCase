@@ -81,7 +81,7 @@ public class JavaBookGiftModel{
 		private int categoryId;
 
 		@Column(name = "\"sendtime\"")
-		private long sendTime;
+		private String sendTime;
 
 		@Id
 		@GeneratedValue
@@ -147,7 +147,7 @@ public class JavaBookGiftModel{
         	this.categoryId = categoryId;
     	}
 
-	    public void setsendTime(long sendTime){
+	    public void setsendTime(String sendTime){
         	this.sendTime = sendTime;
     	}
 
@@ -211,7 +211,7 @@ public class JavaBookGiftModel{
         	return this.categoryId;
     	}
 
-	    public long getsendTime(){
+	    public String getsendTime(){
         	return this.sendTime;
     	}
 

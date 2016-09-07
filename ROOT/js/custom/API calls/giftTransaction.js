@@ -54,7 +54,7 @@ function postGiftProposal(gift) {
                 menageExceptions(resultOfException, 'postGiftProposal(' + JSON.stringify(gift) + ')');
             }
 
-            if (resultOfException === "Gift is sent!") {
+            if (resultOfException === "Gift is sent!" || resultOfException === "Gift is sent! \n Your friend will get an e-mail notification.") {
                 console.log("giftIsSent");
                 successfulMessage("You successfully sent the gift.", "#gifts-successful-message");
 
@@ -71,8 +71,8 @@ function postGiftProposal(gift) {
 
 function postGiftStatus(status, categoryId) {
 
-    /*  console.log(BASE_URL + 'users/' + userId + "/status?categoryId=" + categoryId);
-     console.log(JSON.stringify(status));*/
+    /*  console.log(BASE_URL + 'users/' + userId + "/status?categoryId=" + categoryId); */
+     console.log(JSON.stringify(status));
 
     //ajax that calls REST to post status about accepted or declined gift
     $.ajax({
